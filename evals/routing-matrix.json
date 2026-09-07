@@ -1,0 +1,45 @@
+{
+  "description": "Общая матрица роутинга репозитория. Запрос -> ожидаемый набор скиллов. Пофайловых trigger-евалов недостаточно: негативы одного скилла являются позитивами другого. Каждый active-скилл обязан встречаться и как ожидаемый, и как неожидаемый.",
+  "runs_per_query": 5,
+  "split": "train",
+  "cases": [
+    {
+      "query": "накидал апдейт биллинга, посмотри перед PR: func (s *Service) ProcessPayment(paymentId string, amt float64) (*Receipt, error) { if amt <= 0 { return nil, errors.New(\"Invalid amount!\") } ... }",
+      "expect": ["go-style"],
+      "note": "когда появится code-review, ожидаемый набор станет [go-style, code-review]"
+    },
+    {
+      "query": "это идиоматично? в пакете sqldb лежит тип DBConnection и метод GetConnectionString()",
+      "expect": ["go-style"]
+    },
+    {
+      "query": "ревьюер написал \"exit condition?\" на мою горутину с тикером, что он имеет в виду",
+      "expect": ["go-style"]
+    },
+    {
+      "query": "у нас 40% покрытия, что дописывать в первую очередь и как расставить приоритеты",
+      "expect": [],
+      "note": "должен перехватить test-strategy, когда появится; go-style срабатывать не должен"
+    },
+    {
+      "query": "стоит ли выносить это в отдельный сервис или оставить модулем в монолите",
+      "expect": [],
+      "note": "будущий arch-decision; go-style не должен срабатывать"
+    },
+    {
+      "query": "в нашем питоновском сервисе переменные то camelCase то snake_case, приведи модуль к единому виду",
+      "expect": [],
+      "note": "будущий python-style; проверка, что go-style не тянет на себя чужой язык"
+    },
+    {
+      "query": "не трогай стиль, у нас фриз. найди почему race detector ругается на map в handleUpdate",
+      "expect": [],
+      "note": "явный опт-аут: не срабатывает ни один стилевой скилл"
+    },
+    {
+      "query": "настрой github actions чтобы на каждый PR гонялся golangci-lint и go test с race",
+      "expect": [],
+      "note": "будущий ci-pipelines; near-miss для go-style из-за лексики тулинга"
+    }
+  ]
+}

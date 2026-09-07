@@ -1,0 +1,15 @@
+{
+  "$comment": "Сгенерировано scripts/gen_manifests.py из registry.yaml. Не редактировать.",
+  "name": "acme-agent-skills",
+  "owner": {
+    "name": "Acme Platform Team"
+  },
+  "plugins": [
+    {
+      "name": "acme-agent-skills",
+      "source": "./",
+      "description": "Agent skills: go-style. Ставится профилями через scripts/install.sh.",
+      "version": "0.1.0"
+    }
+  ]
+}

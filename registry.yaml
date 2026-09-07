@@ -1,0 +1,67 @@
+# Реестр скиллов. Единственный машиночитаемый источник о составе репозитория:
+# из него генерируются манифесты плагинов, им же управляется установка.
+# Обязательные поля записи: name, layer, path, version, owner, status,
+# triggers, boundaries. Отсутствие любого из них валит валидатор.
+
+schema_version: 1
+
+meta:
+  name: acme-agent-skills
+  version: 0.1.0          # версия репозитория целиком, тег vX.Y.Z
+  owner: Acme Platform Team
+  license: Apache-2.0     # подтвердить: файла LICENSE в репозитории пока нет
+
+layers:
+  lang:     Форма, идиоматика и инструментарий конкретного языка.
+  practice: Процесс и инженерные решения вне зависимости от языка.
+  platform: Инфраструктура, конфигурация, пайплайны.
+
+skills:
+  - name: go-style
+    layer: lang
+    path: skills/lang/go-style
+    version: 2.0.0            # тело и description переписаны целиком — breaking
+    owner: "@team/go-guild"
+    status: active
+    source_of_truth: https://google.github.io/styleguide/go/
+    last_upstream_sync: 2026-09-07
+    triggers:
+      - написание, генерация, ревью и рефакторинг Go-кода
+      - вопросы про идиоматичность, нейминг, ошибки, интерфейсы, тесты в Go
+    boundaries:
+      - не для других языков
+      - не для инфраструктуры вокруг Go (go.mod, CI, тюнинг рантайма)
+      - не применяется, когда пользователь явно просит пропустить стиль
+      - порядок и подача ревью — за code-review, здесь только содержание правил
+    # delegates_to: [code-review]  # включить, когда code-review появится в реестре
+    evals:
+      execution: skills/lang/go-style/evals/evals.json
+      triggering: skills/lang/go-style/evals/trigger-evals.json
+    baseline: none
+
+# Заготовки соседей. Границы пишутся парами: если A отдаёт вопрос B,
+# у B обязана быть встречная строка — иначе валидатор падает
+# с E-ASYMMETRIC-BOUNDARY.
+#
+#  - name: code-review
+#    layer: practice
+#    boundaries:
+#      - языковые правила не решает: Go — go-style, Python — python-style
+#    delegates_to: [go-style, python-style]
+#
+#  - name: test-strategy
+#    layer: practice
+#    boundaries:
+#      - форма тестов на конкретном языке — за языковым скиллом
+#
+#  - name: python-style
+#    layer: lang
+#    boundaries:
+#      - подача ревью — за code-review
+
+# Профили — единица установки. Списки в flow-стиле: блок парсится
+# установщиком без YAML-библиотеки, поэтому блочный стиль он не прочитает.
+profiles:
+  authors: [go-style]
+  backend-go: [go-style]
+  everyone: []

@@ -1,0 +1,17 @@
+{
+  "$comment": "Сгенерировано scripts/gen_manifests.py из registry.yaml. Не редактировать.",
+  "name": "acme-agent-skills",
+  "version": "0.1.0",
+  "description": "Agent skills: go-style. Ставится профилями через scripts/install.sh.",
+  "author": {
+    "name": "Acme Platform Team"
+  },
+  "license": "Apache-2.0",
+  "keywords": [
+    "agent-skills",
+    "lang"
+  ],
+  "skills": [
+    "./skills/lang/go-style"
+  ]
+}

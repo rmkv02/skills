@@ -1,0 +1,54 @@
+name: validate skills
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Зависимости
+        run: pip install pyyaml
+
+      # Валидатор — определение соответствия репозитория самому себе. Не хватает
+      # проверки — добавляется в него, а не в текст ревью-чеклиста.
+      - name: Структура, frontmatter, реестр, профили, матрица роутинга
+        run: python3 scripts/validate_skills.py --strict
+
+      # Манифесты выводятся из registry.yaml — расхождение валит сборку.
+      - name: Манифесты не разошлись с реестром
+        run: python3 scripts/gen_manifests.py --check
+
+      - name: Манифесты Claude Code парсятся
+        run: |
+          python3 -c "import json; json.load(open('.claude-plugin/marketplace.json'))"
+          python3 -c "import json; json.load(open('.claude-plugin/plugin.json'))"
+
+      # Сводка для агентов без поддержки скиллов собирается из профиля.
+      - name: Бандл профиля собирается
+        run: |
+          python3 scripts/gen_bundle.py --profile backend-go
+          test -s dist/AGENTS.bundle.md
+
+      - name: Установка отрабатывает на чистой директории
+        run: |
+          mkdir -p /tmp/install-check && cd /tmp/install-check
+          "$GITHUB_WORKSPACE/scripts/install.sh" --profile backend-go --copy
+          test -f .agents/skills/go-style/SKILL.md
+          test -f .claude/skills/go-style/SKILL.md
+
+      # Установка "всего" по умолчанию запрещена: ставится профилями.
+      - name: Установка без профиля падает
+        run: |
+          cd /tmp && ! "$GITHUB_WORKSPACE/scripts/install.sh"
+
+      - name: Скрипты синтаксически корректны и исполняемы
+        run: |
+          for f in $(find skills scripts -name '*.sh'); do
+            bash -n "$f"
+            test -x "$f" || { echo "не исполняемый: $f (chmod +x)"; exit 1; }
+          done
