@@ -33,10 +33,35 @@ skills:
       - не для инфраструктуры вокруг Go (go.mod, CI, тюнинг рантайма)
       - не применяется, когда пользователь явно просит пропустить стиль
       - порядок и подача ревью — за code-review, здесь только содержание правил
-    # delegates_to: [code-review]  # включить, когда code-review появится в реестре
+      - разметка .md-файлов (README, дизайн-доки) — за markdown-style, здесь только doc comments в .go
+    delegates_to: [markdown-style]
+    # добавить code-review в delegates_to, когда он появится в реестре
     evals:
       execution: skills/lang/go-style/evals/evals.json
       triggering: skills/lang/go-style/evals/trigger-evals.json
+    baseline: none
+
+  - name: markdown-style
+    layer: lang
+    path: skills/lang/markdown-style
+    version: 0.1.0
+    owner: "@team/docs-guild"
+    status: experimental       # в рабочие профили — после прогона евалов
+    source_of_truth: https://google.github.io/styleguide/docguide/style.html
+    last_upstream_sync: 2026-09-07
+    triggers:
+      - написание, генерация, ревью и реструктуризация .md-документов
+      - вопросы про раскладку документа, [TOC], заголовки, списки, блоки кода, ссылки, таблицы в Markdown
+    boundaries:
+      - "не про текст: голос, время, терминология и регистр заголовков — за Google developer documentation style guide"
+      - документация внутри кода (doc comments в .go) — за go-style
+      - "не для других разметок: reStructuredText, AsciiDoc, HTML-страницы"
+      - "не для тулинга вокруг доки: генераторы сайтов, link checker в CI, публикация"
+      - не применяется, когда пользователь явно просит не трогать оформление
+    delegates_to: [go-style]
+    evals:
+      execution: skills/lang/markdown-style/evals/evals.json
+      triggering: skills/lang/markdown-style/evals/trigger-evals.json
     baseline: none
 
 # Заготовки соседей. Границы пишутся парами: если A отдаёт вопрос B,
@@ -62,6 +87,6 @@ skills:
 # Профили — единица установки. Списки в flow-стиле: блок парсится
 # установщиком без YAML-библиотеки, поэтому блочный стиль он не прочитает.
 profiles:
-  authors: [go-style]
+  authors: [go-style, markdown-style]
   backend-go: [go-style]
   everyone: []
