@@ -1,0 +1,22 @@
+[
+  {"query": "глянь README перед мержем, я там переписал раздел про установку", "should_trigger": true, "note": "ревью .md, базовый кейс"},
+  {"query": "куда ставить [TOC] — до вводного абзаца или после", "should_trigger": true, "note": "раскладка документа"},
+  {"query": "у меня в доке два H1 и часть заголовков подчёркиванием, приведи к одному виду", "should_trigger": true, "note": "заголовки"},
+  {"query": "почему список разваливается, когда я вставляю в пункт блок кода", "should_trigger": true, "note": "код внутри списка, симптом без упоминания стиля"},
+  {"query": "в таблице пять колонок и две строки, половина ячеек пустая — так нормально или переделать", "should_trigger": true, "note": "таблица против списка"},
+  {"query": "строки в таблице уехали за 200 символов из-за ссылок, что с этим делать", "should_trigger": true, "note": "reference links"},
+  {"query": "напиши runbook по раскатке сервиса, оформи как обычный md в репозитории", "should_trigger": true, "note": "генерация: стиль применяется и к тому, что пишем сами"},
+  {"query": "ревьюер написал \"informative link titles?\" в PR с документацией, что он хочет", "should_trigger": true, "note": "комментарий ревью, файла в контексте нет"},
+  {"query": "можно ли вставить <details> в md-файл или лучше без html", "should_trigger": true, "note": "markdown против html"},
+  {"query": "приведи CHANGELOG.md к нашему стилю разметки", "should_trigger": true, "note": "явная просьба про разметку"},
+  {"query": "перепиши введение в доке живее, слишком канцелярит и много страдательного залога", "should_trigger": false, "note": "near-miss: тот же файл, но вопрос про текст, а не про разметку"},
+  {"query": "поправь doc comments у экспортированных функций в пакете billing", "should_trigger": false, "note": "near-miss: документация, но внутри Go-кода — go-style"},
+  {"query": "напиши docstring'и в питоновском модуле по google style", "should_trigger": false, "note": "near-miss: 'google style' и документация, но docstrings в коде"},
+  {"query": "настрой mkdocs и деплой документации на gh-pages", "should_trigger": false, "note": "near-miss: доки, но тулинг и публикация"},
+  {"query": "почему у нас в CI падает link checker на половине страниц", "should_trigger": false, "note": "near-miss: ссылки в доке, но задача про пайплайн"},
+  {"query": "сконвертируй эти .md в pdf с оглавлением и нумерацией страниц", "should_trigger": false, "note": "near-miss: .md и оглавление, но конвертация"},
+  {"query": "переведи README на английский, термины не трогай", "should_trigger": false, "note": "near-miss: README, но перевод текста"},
+  {"query": "распиши процесс: кто ревьюит доку, за сколько дней и где заводить задачи", "should_trigger": false, "note": "near-miss: ревью документации, но процесс и владение"},
+  {"query": "у страницы документации на мобилке съезжают заголовки, посмотри css", "should_trigger": false, "note": "near-miss: заголовки и документация, но вёрстка сайта"},
+  {"query": "перепиши эту страницу с rst на asciidoc, у нас переезд на antora", "should_trigger": false, "note": "near-miss: разметка документации, но другие форматы"}
+]
