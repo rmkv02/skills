@@ -16,3 +16,7 @@ dist/
 __pycache__/
 *.py[cod]
 .DS_Store
+
+# Кеши проверок из skills/lang/python-style/scripts/check_py.sh.
+.mypy_cache/
+.pytype/

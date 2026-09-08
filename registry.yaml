@@ -29,7 +29,7 @@ skills:
       - написание, генерация, ревью и рефакторинг Go-кода
       - вопросы про идиоматичность, нейминг, ошибки, интерфейсы, тесты в Go
     boundaries:
-      - не для других языков
+      - не для других языков; Python — python-style
       - не для инфраструктуры вокруг Go (go.mod, CI, тюнинг рантайма)
       - не применяется, когда пользователь явно просит пропустить стиль
       - порядок и подача ревью — за code-review, здесь только содержание правил
@@ -54,14 +54,39 @@ skills:
       - вопросы про раскладку документа, [TOC], заголовки, списки, блоки кода, ссылки, таблицы в Markdown
     boundaries:
       - "не про текст: голос, время, терминология и регистр заголовков — за Google developer documentation style guide"
-      - документация внутри кода (doc comments в .go) — за go-style
+      - "документация внутри кода — за языковым скиллом: doc comments в .go — go-style, docstrings в .py — python-style"
       - "не для других разметок: reStructuredText, AsciiDoc, HTML-страницы"
       - "не для тулинга вокруг доки: генераторы сайтов, link checker в CI, публикация"
       - не применяется, когда пользователь явно просит не трогать оформление
-    delegates_to: [go-style]
+    delegates_to: [go-style, python-style]
     evals:
       execution: skills/lang/markdown-style/evals/evals.json
       triggering: skills/lang/markdown-style/evals/trigger-evals.json
+    baseline: none
+
+  - name: python-style
+    layer: lang
+    path: skills/lang/python-style
+    version: 0.1.0
+    owner: "@team/python-guild"
+    status: experimental       # в рабочие профили — после прогона евалов
+    source_of_truth: https://google.github.io/styleguide/pyguide.html
+    last_upstream_sync: 2026-09-07
+    triggers:
+      - написание, генерация, ревью и рефакторинг Python-кода
+      - вопросы про нейминг, докстринги, импорты, исключения, аннотации типов, mutable defaults, comprehensions, вызовы logging
+    boundaries:
+      - не для других языков; Go — go-style
+      - не для упаковки, зависимостей и CI (poetry, pip, wheel, workflows)
+      - не для фреймворковых идиом (pandas, Django), если вопрос не про стиль
+      - не применяется, когда пользователь явно просит пропустить стиль
+      - порядок и подача ревью — за code-review, здесь только содержание правил
+      - разметка .md-файлов (README, дизайн-доки) — за markdown-style, здесь только docstrings и комментарии в .py
+    delegates_to: [markdown-style]
+    # добавить code-review в delegates_to, когда он появится в реестре
+    evals:
+      execution: skills/lang/python-style/evals/evals.json
+      triggering: skills/lang/python-style/evals/trigger-evals.json
     baseline: none
 
 # Заготовки соседей. Границы пишутся парами: если A отдаёт вопрос B,
@@ -78,15 +103,10 @@ skills:
 #    layer: practice
 #    boundaries:
 #      - форма тестов на конкретном языке — за языковым скиллом
-#
-#  - name: python-style
-#    layer: lang
-#    boundaries:
-#      - подача ревью — за code-review
 
 # Профили — единица установки. Списки в flow-стиле: блок парсится
 # установщиком без YAML-библиотеки, поэтому блочный стиль он не прочитает.
 profiles:
-  authors: [go-style, markdown-style]
+  authors: [go-style, markdown-style, python-style]
   backend-go: [go-style]
   everyone: []

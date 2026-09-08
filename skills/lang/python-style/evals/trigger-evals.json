@@ -1,0 +1,22 @@
+[
+  {"query": "глянь перед PR: def add_tag(item, tags=[]): tags.append(item.name); return tags", "should_trigger": true, "note": "review of Python code, mutable default — core case"},
+  {"query": "это питонично? класс userCache с методами Get() и NormalizeKey(), внутри self.__store", "should_trigger": true, "note": "naming + mangling + staticmethod lexicon"},
+  {"query": "что писать в докстринге функции: Args и Returns обязательны или можно только summary", "should_trigger": true, "note": "docstring sections, no code attached"},
+  {"query": "logging.info(f\"user {uid} not found\") — коллега говорит так нельзя, почему", "should_trigger": true, "note": "%-style lazy logging call"},
+  {"query": "Optional[str] или str | None в новых аннотациях, и что делать с def f(a: str = None)", "should_trigger": true, "note": "NoneType annotations, implicit Optional"},
+  {"query": "напиши на питоне функцию, которая читает csv кусками и отдаёт строки генератором", "should_trigger": true, "note": "generation: style applies to code we write too"},
+  {"query": "можно ли ловить except Exception вокруг всего хендлера, чтобы воркер не падал", "should_trigger": true, "note": "broad except, isolation boundary exception"},
+  {"query": "импортировать from models.user import User или import models.user — есть разница?", "should_trigger": true, "note": "module-vs-symbol import"},
+  {"query": "почему pytype ругается на Sequence без параметра в сигнатуре, там же и так понятно", "should_trigger": true, "note": "unparameterised generics"},
+  {"query": "T = TypeVar(\"T\", bound=Callable) — норм имя или надо переименовать", "should_trigger": true, "note": "TypeVar naming rule, easy to state backwards"},
+  {"query": "разрули конфликт версий в poetry.lock, pydantic тянет несовместимый typing-extensions", "should_trigger": false, "note": "near-miss: Python, but dependency resolution"},
+  {"query": "настрой github actions, чтобы на каждый PR гонялись pytest и ruff с кешем зависимостей", "should_trigger": false, "note": "near-miss: Python linter lexicon, task is CI plumbing"},
+  {"query": "в go-сервисе ресиверы то b, то board, то self — приведи к одному виду", "should_trigger": false, "note": "near-miss: identical naming task, wrong language"},
+  {"query": "у нас 55% покрытия по сервису на питоне, что дописывать в первую очередь", "should_trigger": false, "note": "near-miss: Python tests, but coverage strategy"},
+  {"query": "не трогай стиль, у нас фриз. найди, почему celery-воркер обрабатывает каждое второе сообщение дважды", "should_trigger": false, "note": "explicit opt-out inside a Python task"},
+  {"query": "этот запрос в django orm делает N+1, перепиши через select_related", "should_trigger": false, "note": "near-miss: Python framework code, question is about query performance"},
+  {"query": "оформи README для нашей питоновской библиотеки: два H1, таблица параметров разъезжается", "should_trigger": false, "note": "near-miss: Python project, but Markdown layout — markdown-style"},
+  {"query": "собери wheel и выложи пакет во внутренний pypi, нужен ли pyproject или хватит setup.py", "should_trigger": false, "note": "near-miss: packaging and distribution"},
+  {"query": "чем python отличается от go по конкурентности, готовлю доклад для команды", "should_trigger": false, "note": "near-miss: language comparison with no code under discussion"},
+  {"query": "агрегация в pandas на 10 млн строк занимает 4 минуты, как ускорить", "should_trigger": false, "note": "near-miss: Python performance, not style"}
+]

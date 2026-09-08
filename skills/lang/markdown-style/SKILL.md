@@ -1,6 +1,6 @@
 ---
 name: markdown-style
-description: Applies Google's Markdown style guide to Markdown source. Use this skill whenever .md files are written, generated, reviewed or restructured — READMEs, design docs, runbooks, changelogs, Markdown pasted into chat — even when no style review was asked for. Also use for questions about document layout, `[TOC]` placement, heading levels, list indentation, fenced code blocks, link titles, reference links, or whether something should be a table or a list. Do NOT use for the prose itself (voice, tense, wording — that is the Google developer documentation style guide), for documentation inside code such as Go doc comments (go-style owns those), or for other markup formats and docs tooling.
+description: Applies Google's Markdown style guide to Markdown source. Use this skill whenever .md files are written, generated, reviewed or restructured — READMEs, design docs, changelogs, Markdown pasted into chat — even when no style review was asked for. Also use for questions about document layout, `[TOC]` placement, heading levels, list indentation, fenced code blocks, links, or whether something should be a table or a list. Do NOT use for the prose itself (voice, tense, wording — that is the Google developer documentation style guide), for documentation inside code (Go doc comments are go-style, Python docstrings python-style), or for other markup formats and docs tooling.
 license: CC-BY-3.0
 ---
 
@@ -222,7 +222,8 @@ Three things keep this useful rather than annoying:
 The prose itself — voice, tense, terminology, sentence length, and the
 capitalization *style* of a title (the guide defers that one to the Google
 developer documentation style guide; say so rather than inventing a rule).
-Documentation embedded in source code: Go doc comments, docstrings, JSDoc.
+Documentation embedded in source code: Go doc comments (`go-style`), Python
+docstrings (`python-style`), JSDoc.
 Other markup: reStructuredText, AsciiDoc, Jupyter, raw HTML pages. Docs tooling:
 site generators, link checkers in CI, publishing. Throwaway Markdown — a chat
 message, a scratch note, a PR description — where a style pass is pure noise.

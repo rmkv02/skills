@@ -1,0 +1,87 @@
+{
+  "skill_name": "python-style",
+  "method": "paired",
+  "comment": "Each case runs with the skill loaded and without it, same model and prompt. The skill is justified only if it beats baseline consistently. An expectation that also passes at baseline discriminates nothing and must be rewritten.",
+  "baseline": {"kind": "no-skill", "note": "From the next version on, baseline is a snapshot of the previous one, so these double as regression tests."},
+  "runs_per_case": 3,
+  "scoring": {
+    "pass": "every expectation with required=true holds in a majority of runs",
+    "also_record": ["wall_clock_seconds", "output_tokens"],
+    "note": "Time and tokens are part of the result: one extra finding for triple the output is not obviously better."
+  },
+  "evals": [
+    {
+      "id": "review-service",
+      "prompt": "Review this before I open the PR.",
+      "files": ["evals/files/user_service.py"],
+      "expectations": [
+        {"id": "safety-first", "required": true, "assert": "Leads with the correctness defects, not the naming ones: seeds=[] as a mutable default shared across instances (language/functions.md §2.12), the file opened without `with` and never closed (style/strings-logging.md §3.11), and `assert key` used as precondition validation, which -O removes (language/exceptions.md §2.4)."},
+        {"id": "broad-except", "required": true, "assert": "Flags `except Exception as exc` in refresh() on two counts: catching Exception without re-raising or being a deliberate isolation boundary, and a try body large enough to hide which call failed (language/exceptions.md §2.4)."},
+        {"id": "swallowed-reason", "required": true, "assert": "Flags logging.error('refresh failed') for dropping `exc`: the message asserts no cause and the traceback is lost (style/strings-logging.md §3.10.2)."},
+        {"id": "logging-fstring", "required": true, "assert": "Flags the f-string in logging.info and rewrites it as a literal pattern with lazy args: logging.info('loaded %d rows from %s', len(rows), path) (style/strings-logging.md §3.10.1)."},
+        {"id": "string-accumulation", "required": true, "assert": "Flags `report += line.strip() + ';'` inside the loop and proposes a list plus ''.join, or io.StringIO (style/strings-logging.md §3.10)."},
+        {"id": "implicit-optional", "required": true, "assert": "Flags `key: Text = None` twice over: implicit Optional must be written `str | None` (style/typing.md §3.19.5) and typing.Text is dead Python 2 compatibility (style/typing.md §3.19.11)."},
+        {"id": "bare-generics", "required": true, "assert": "Flags the unparameterised `Sequence` and `Dict` in load_users as silently meaning Any, and prefers builtin/abstract generics over typing.Dict and typing.List (style/typing.md §3.19.15, §3.19.12)."},
+        {"id": "iteration-and-truthiness", "required": true, "assert": "Flags `.keys()` and `.readlines()` for plain iteration (language/expressions.md §2.8) and `if len(rows) == 0` instead of `if not rows` (language/expressions.md §2.14)."},
+        {"id": "staticmethod", "required": true, "assert": "Flags @staticmethod NormalizeKey and proposes a module-level function (language/functions.md §2.17)."},
+        {"id": "comprehension", "required": false, "assert": "Flags active_pairs for two `for` clauses plus a filter in one comprehension and proposes a loop (language/expressions.md §2.7)."},
+        {"id": "naming", "required": true, "assert": "Flags at least: class `userCache` (should be CapWords), methods `Get`/`NormalizeKey` (should be lower_with_under), `MaxRetries` (module constant, CAPS_WITH_UNDER), and `id_to_name_dict` for baking the type into the name (style/naming.md §3.16, §3.16.1)."},
+        {"id": "mangling", "required": false, "assert": "Flags `self.__store` and recommends one leading underscore: mangling hurts testability without being private (style/naming.md §3.16.2)."},
+        {"id": "symbol-import", "required": true, "assert": "Flags `from models.user import User` as importing a class rather than a module, and does not extend that objection to the typing imports, which are exempt (language/imports-packages.md §2.2, §2.2.4.1)."},
+        {"id": "exception-naming", "required": false, "assert": "Notes that UserServiceError repeats the module name (user_service.Error is the form) and that the class docstring describes the trigger instead of the error itself (language/exceptions.md §2.4, style/docstrings.md §3.8.4)."},
+        {"id": "todo", "required": true, "assert": "Flags `# TODO(alice):` on both counts: a person instead of a tracked bug link, and the discouraged parenthesised form (style/strings-logging.md §3.12)."},
+        {"id": "docstring", "required": false, "assert": "Flags `\"\"\"Loads users.\"\"\"` for omitting Args/Returns/Raises that the signature does not convey, and the missing docstrings on the public class and its methods (style/docstrings.md §3.8.3, §3.8.4)."},
+        {"id": "no-fabrication", "required": true, "assert": "Does not claim pylint, pyink or pytype were run unless the shell was actually used; if it could not run scripts/check_py.sh, it says so instead of reporting formatting as clean."},
+        {"id": "format", "required": true, "assert": "Uses the severity/current/fix/why block from SKILL.md, ordered correctness before clarity before layout nits, with both snippets valid Python."}
+      ]
+    },
+    {
+      "id": "review-tests",
+      "prompt": "Anything wrong with these tests?",
+      "files": ["evals/files/user_service_test.py"],
+      "expectations": [
+        {"id": "assert-not-flagged", "required": true, "assert": "Does NOT flag the plain `assert` statements: inside pytest tests they are the expected way to state expectations (language/exceptions.md §2.4). Flagging them is a hard fail."},
+        {"id": "mutable-default-in-helper", "required": true, "assert": "Flags `seeds=[]` in make_cache — the rule does not relax in test code (language/functions.md §2.12)."},
+        {"id": "test-naming", "required": true, "assert": "Flags `test1` for saying nothing and `testGetReturnsStoredValue` for CapWords; proposes test_<method_under_test>_<state>, e.g. test_get_returns_stored_value (style/naming.md §3.16.2)."},
+        {"id": "boilerplate-module-docstring", "required": false, "assert": "Notes that `\"\"\"Tests for user_service.\"\"\"` carries no information and test modules need no docstring unless it explains setup or how to run them (style/docstrings.md §3.8.2.1)."},
+        {"id": "no-padding", "required": true, "assert": "Does not invent findings about the pytest.raises block or the import layout, both of which are correct."}
+      ]
+    },
+    {
+      "id": "clean-input",
+      "prompt": "Style review please.",
+      "files": ["evals/files/pricing.py"],
+      "expectations": [
+        {"id": "reports-clean", "required": true, "assert": "Reports the file as conforming in roughly one line rather than producing a findings list."},
+        {"id": "no-manufactured-nits", "required": true, "assert": "Does not raise the quote character, the `del currency` idiom, the abstract Sequence/Mapping parameters, or the Args/Returns/Raises layout — all of them are correct or deliberately open. Manufacturing nits here is a hard fail."},
+        {"id": "openness-if-mentioned", "required": false, "assert": "If quote style comes up at all, it is described as open and settled by the surrounding file, not as a finding (references/INDEX.md, 'Where the guide is deliberately open')."}
+      ]
+    },
+    {
+      "id": "authority-order",
+      "prompt": "pylint wants me to rename this local to snake_case but it comes straight out of the paper we're implementing, and pyink keeps reformatting the line either way. Who wins?",
+      "expectations": [
+        {"id": "formatter-top", "required": true, "assert": "States that the formatter (Black/Pyink) and Google's pylintrc settle anything mechanical and outrank opinion, including the model's own."},
+        {"id": "math-exemption", "required": true, "assert": "Names the mathematical-notation exemption: short names matching a cited reference are preferred, the source must be cited in a comment or docstring, and the linter is silenced narrowly with `pylint: disable=invalid-name` (style/naming.md §3.16.5)."},
+        {"id": "public-api-limit", "required": false, "assert": "Notes the limit: public APIs still get descriptive names."}
+      ]
+    },
+    {
+      "id": "silence-is-an-answer",
+      "prompt": "Single or double quotes in this module? And should docstrings read \"Fetches rows\" or \"Fetch rows\"?",
+      "expectations": [
+        {"id": "non-decision", "required": true, "assert": "States that the guide is deliberately open on both and that neither should be raised as a review finding; the file's existing choice decides."},
+        {"id": "no-invention", "required": true, "assert": "Does not fabricate a preference or attribute one to Google."},
+        {"id": "consistency-scope", "required": false, "assert": "Notes that consistency applies within the file and is not a defence for keeping a style the guide has moved away from."}
+      ]
+    },
+    {
+      "id": "opt-out-respected",
+      "prompt": "Don't worry about style, we're in a freeze — why does this worker process every second message twice?",
+      "expectations": [
+        {"id": "no-style-list", "required": true, "assert": "Produces no style findings list."},
+        {"id": "answers", "required": true, "assert": "Answers the correctness question, and may note a genuine bug without stylistic commentary."}
+      ]
+    }
+  ]
+}
