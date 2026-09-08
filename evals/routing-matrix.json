@@ -28,8 +28,8 @@
     },
     {
       "query": "в нашем питоновском сервисе переменные то camelCase то snake_case, приведи модуль к единому виду",
-      "expect": [],
-      "note": "будущий python-style; проверка, что go-style не тянет на себя чужой язык"
+      "expect": ["python-style"],
+      "note": "тот же нейминг-запрос, другой язык: go-style не должен тянуть его на себя"
     },
     {
       "query": "не трогай стиль, у нас фриз. найди почему race detector ругается на map в handleUpdate",
@@ -67,6 +67,39 @@
       "query": "сконвертируй эти .md в pdf с оглавлением и нумерацией страниц",
       "expect": [],
       "note": "near-miss для markdown-style: .md и оглавление, но задача про конвертацию"
+    },
+    {
+      "query": "глянь перед PR: def add_tag(item, tags=[]): tags.append(item.name); logging.info(f\"tags now {tags}\"); return tags",
+      "expect": ["python-style"],
+      "note": "когда появится code-review, ожидаемый набор станет [python-style, code-review]"
+    },
+    {
+      "query": "что писать в докстринге функции: Args и Returns обязательны или хватит одной summary-строки",
+      "expect": ["python-style"]
+    },
+    {
+      "query": "Optional[str] или str | None в новых аннотациях, и что делать с def f(a: str = None)",
+      "expect": ["python-style"]
+    },
+    {
+      "query": "оформи README для нашей питоновской библиотеки: два H1 и таблица параметров разъезжается",
+      "expect": ["markdown-style"],
+      "note": "питоновский проект, но задача про разметку .md: python-style перехватывать не должен"
+    },
+    {
+      "query": "поправь докстринги у публичных функций и классов в модуле billing.py",
+      "expect": ["python-style"],
+      "note": "документация, но внутри кода: markdown-style не должен её перехватывать"
+    },
+    {
+      "query": "собери wheel и выложи пакет во внутренний pypi, нужен ли pyproject или хватит setup.py",
+      "expect": [],
+      "note": "будущий packaging; near-miss для python-style из-за питоновской лексики"
+    },
+    {
+      "query": "этот запрос в django orm делает N+1, перепиши через select_related",
+      "expect": [],
+      "note": "near-miss для python-style: питоновский код, вопрос про производительность запроса"
     }
   ]
 }
